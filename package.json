@@ -26,6 +26,11 @@
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15"
   },
+  "overrides": {
+    "nth-check": "^2.1.1",
+    "postcss": "^8.4.31",
+    "webpack-dev-server": "^4.15.1"
+  },
   "browserslist": {
     "production": [
       ">0.2%",
