@@ -258,90 +258,163 @@ function App() {
   const modeConfig = getModeConfig();
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4">
+    <div className="min-h-screen flex items-center justify-center p-4 sm:p-6 lg:p-8">
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-lg"
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="w-full max-w-2xl"
       >
-        {/* Header */}
+        {/* Enhanced Header */}
         <motion.div
-          className="text-center mb-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.6 }}
         >
-          <h1 className="text-4xl font-bold text-white mb-2 text-shadow">
-            Pomodoro Timer
-          </h1>
-          <p className="text-white/80">Boost your productivity with focused work sessions</p>
+          <div className="flex items-center justify-center mb-4">
+            <motion.div
+              className="p-3 mr-4 bg-white/[0.12] rounded-2xl backdrop-blur-md border border-white/[0.2]"
+              animate={{ rotate: [0, 5, -5, 0] }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+            >
+              <Timer className="w-8 h-8 text-white" />
+            </motion.div>
+            <h1 className="heading-primary">
+              Pomodoro Timer
+            </h1>
+          </div>
+          <p className="text-xl text-white/80 font-medium">
+            Boost your productivity with focused work sessions
+          </p>
         </motion.div>
 
-        {/* Main Timer Card */}
+        {/* Enhanced Main Timer Card */}
         <motion.div
-          className="card p-8 text-center relative overflow-hidden"
-          initial={{ scale: 0.9, opacity: 0 }}
+          className="card-elevated p-10 text-center relative overflow-hidden mb-8"
+          initial={{ scale: 0.95, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.3 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          whileHover={{ scale: 1.01 }}
         >
-          {/* Background Animation */}
-          <div className={`absolute inset-0 bg-gradient-to-br ${modeConfig.bgColor} opacity-5`} />
+          {/* Enhanced Background Animation */}
+          <motion.div 
+            className={`absolute inset-0 bg-gradient-to-br ${modeConfig.bgColor} opacity-10`}
+            animate={{ 
+              background: `linear-gradient(45deg, ${modeConfig.color}10, transparent, ${modeConfig.color}05)` 
+            }}
+          />
           
-          {/* Mode Header */}
-          <div className="relative z-10 mb-6">
-            <div className="flex items-center justify-center mb-2">
-              <modeConfig.icon className="w-6 h-6 mr-2" style={{ color: modeConfig.color }} />
-              <h2 className="text-2xl font-semibold text-gray-800 dark:text-white">
+          {/* Enhanced Mode Header */}
+          <motion.div 
+            className="relative z-10 mb-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+          >
+            <div className="flex items-center justify-center mb-3">
+              <motion.div
+                className="p-2 mr-3 rounded-xl backdrop-blur-sm"
+                style={{ backgroundColor: `${modeConfig.color}20` }}
+                animate={{ scale: [1, 1.1, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+              >
+                <modeConfig.icon className="w-7 h-7" style={{ color: modeConfig.color }} />
+              </motion.div>
+              <h2 className="heading-secondary">
                 {modeConfig.title}
               </h2>
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">
-              Session {completedSessions + 1} of {settings.longBreakInterval}
+            <div className="inline-flex items-center px-4 py-2 bg-white/[0.08] backdrop-blur-md rounded-full border border-white/[0.15]">
+              <span className="text-sm font-medium text-white/80">
+                Session {completedSessions + 1} of {settings.longBreakInterval}
+              </span>
             </div>
-          </div>
+          </motion.div>
 
-          {/* Timer Display */}
-          <div className="relative z-10 mb-8">
-            <div className="w-64 h-64 mx-auto relative">
-              <CircularProgressbar
-                value={getProgress()}
-                text={formatTime(timeLeft)}
-                styles={buildStyles({
-                  rotation: 0,
-                  strokeLinecap: 'round',
-                  pathTransition: 'stroke-dashoffset 1s ease',
-                  pathColor: modeConfig.color,
-                  textColor: darkMode ? '#f7fafc' : '#1a202c',
-                  trailColor: darkMode ? '#4a5568' : '#e2e8f0',
-                  backgroundColor: modeConfig.color,
-                  textSize: '14px'
-                })}
-              />
+          {/* Enhanced Timer Display */}
+          <motion.div 
+            className="relative z-10 mb-10"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.8, duration: 0.6 }}
+          >
+            <div className="w-80 h-80 mx-auto relative">
+              <motion.div
+                className={`timer-ring ${isRunning ? 'active' : ''}`}
+                whileHover={{ scale: 1.02 }}
+              >
+                <CircularProgressbar
+                  value={getProgress()}
+                  text=""
+                  styles={buildStyles({
+                    rotation: -0.25,
+                    strokeLinecap: 'round',
+                    pathTransition: 'stroke-dashoffset 1s ease-in-out',
+                    pathColor: modeConfig.color,
+                    trailColor: darkMode ? '#374151' : '#f1f5f9',
+                    strokeWidth: 4,
+                  })}
+                />
+              </motion.div>
               
-              {/* Pulse effect when running */}
+              {/* Enhanced Timer Content */}
+              <motion.div 
+                className="absolute inset-0 flex items-center justify-center"
+                animate={{ scale: isRunning ? [1, 1.02, 1] : 1 }}
+                transition={{ duration: 2, repeat: isRunning ? Infinity : 0 }}
+              >
+                <div className="timer-content p-8 text-center">
+                  <motion.div 
+                    className="text-6xl sm:text-7xl font-mono font-bold text-white mb-2"
+                    key={formatTime(timeLeft)}
+                    initial={{ scale: 1.1, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    {formatTime(timeLeft)}
+                  </motion.div>
+                  <div className="text-sm font-medium text-white/70 uppercase tracking-wider">
+                    {currentMode === TIMER_MODES.WORK ? 'Focus Time' : 'Break Time'}
+                  </div>
+                </div>
+              </motion.div>
+              
+              {/* Enhanced Pulse effect when running */}
               {isRunning && (
-                <div 
-                  className="absolute inset-0 rounded-full animate-pulse-ring"
+                <motion.div 
+                  className="absolute inset-0 rounded-full"
                   style={{ 
-                    background: `radial-gradient(circle, ${modeConfig.color}20 0%, transparent 70%)` 
+                    background: `radial-gradient(circle, ${modeConfig.color}15 0%, transparent 70%)`,
+                  }}
+                  animate={{ 
+                    scale: [1, 1.1, 1],
+                    opacity: [0.5, 0.8, 0.5]
+                  }}
+                  transition={{ 
+                    duration: 2, 
+                    repeat: Infinity,
+                    ease: "easeInOut"
                   }}
                 />
               )}
             </div>
-          </div>
+          </motion.div>
 
-          {/* Controls */}
-          <div className="relative z-10 flex justify-center space-x-4 mb-6">
+          {/* Enhanced Controls */}
+          <motion.div 
+            className="relative z-10 flex justify-center items-center space-x-6 mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.0 }}
+          >
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               onClick={isRunning ? pauseTimer : startTimer}
-              className={`btn-primary flex items-center space-x-2 ${
-                isRunning ? 'bg-gradient-to-r from-warning-500 to-warning-600' : ''
-              }`}
+              className={`${isRunning ? 'btn-warning' : 'btn-primary'} flex items-center space-x-3 text-lg font-semibold min-w-[140px]`}
             >
-              {isRunning ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+              {isRunning ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6" />}
               <span>{isRunning ? 'Pause' : 'Start'}</span>
             </motion.button>
 
@@ -363,71 +436,118 @@ function App() {
             >
               <span>Skip</span>
             </motion.button>
-          </div>
+          </motion.div>
 
-          {/* Quick Actions */}
-          <div className="relative z-10 flex justify-center space-x-4">
+          {/* Enhanced Quick Actions */}
+          <motion.div 
+            className="relative z-10 flex justify-center space-x-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.2 }}
+          >
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.1, rotate: 90 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setShowSettings(true)}
-              className="p-3 bg-white/20 dark:bg-gray-800/20 rounded-full backdrop-blur-sm hover:bg-white/30 transition-colors"
+              className="control-icon"
+              title="Settings"
             >
-              <Settings className="w-5 h-5 text-white" />
+              <Settings className="w-6 h-6 text-white" />
             </motion.button>
 
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setSoundEnabled(!soundEnabled)}
-              className="p-3 bg-white/20 dark:bg-gray-800/20 rounded-full backdrop-blur-sm hover:bg-white/30 transition-colors"
+              className="control-icon"
+              title={soundEnabled ? "Disable Sound" : "Enable Sound"}
             >
               {soundEnabled ? 
-                <Volume2 className="w-5 h-5 text-white" /> : 
-                <VolumeX className="w-5 h-5 text-white" />
+                <Volume2 className="w-6 h-6 text-white" /> : 
+                <VolumeX className="w-6 h-6 text-white" />
               }
             </motion.button>
 
             <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
               onClick={() => setDarkMode(!darkMode)}
-              className="p-3 bg-white/20 dark:bg-gray-800/20 rounded-full backdrop-blur-sm hover:bg-white/30 transition-colors"
+              className="control-icon"
+              title={darkMode ? "Light Mode" : "Dark Mode"}
             >
-              {darkMode ? 
-                <Sun className="w-5 h-5 text-white" /> : 
-                <Moon className="w-5 h-5 text-white" />
-              }
+              <motion.div
+                animate={{ rotate: darkMode ? 180 : 0 }}
+                transition={{ duration: 0.5 }}
+              >
+                {darkMode ? 
+                  <Sun className="w-6 h-6 text-white" /> : 
+                  <Moon className="w-6 h-6 text-white" />
+                }
+              </motion.div>
             </motion.button>
-          </div>
+          </motion.div>
         </motion.div>
 
-        {/* Stats */}
+        {/* Enhanced Stats */}
         <motion.div
-          className="grid grid-cols-2 gap-4 mt-6"
-          initial={{ opacity: 0, y: 20 }}
+          className="grid grid-cols-1 sm:grid-cols-2 gap-6"
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
+          transition={{ delay: 1.4, duration: 0.6 }}
         >
-          <div className="card p-6 text-center">
-            <CheckCircle className="w-8 h-8 text-success-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-800 dark:text-white">
+          <motion.div 
+            className="card-stats p-8 text-center group"
+            whileHover={{ scale: 1.02, y: -5 }}
+            transition={{ duration: 0.2 }}
+          >
+            <motion.div
+              className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-success-500 to-success-600 rounded-2xl flex items-center justify-center shadow-lg"
+              whileHover={{ rotate: [0, -10, 10, 0] }}
+              transition={{ duration: 0.5 }}
+            >
+              <CheckCircle className="w-8 h-8 text-white" />
+            </motion.div>
+            <motion.div 
+              className="text-4xl font-bold text-white mb-2"
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity }}
+            >
               {completedSessions}
-            </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">
+            </motion.div>
+            <div className="text-base font-medium text-white/80">
               Completed Sessions
             </div>
-          </div>
-          
-          <div className="card p-6 text-center">
-            <Clock className="w-8 h-8 text-secondary-500 mx-auto mb-2" />
-            <div className="text-2xl font-bold text-gray-800 dark:text-white">
-              {Math.floor(totalSessions * settings.workDuration / 60)}h {(totalSessions * settings.workDuration) % 60}m
+            <div className="text-sm text-white/60 mt-1">
+              Keep going! 💪
             </div>
-            <div className="text-sm text-gray-600 dark:text-gray-400">
+          </motion.div>
+          
+          <motion.div 
+            className="card-stats p-8 text-center group"
+            whileHover={{ scale: 1.02, y: -5 }}
+            transition={{ duration: 0.2 }}
+          >
+            <motion.div
+              className="w-16 h-16 mx-auto mb-4 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-2xl flex items-center justify-center shadow-lg"
+              whileHover={{ rotate: [0, 10, -10, 0] }}
+              transition={{ duration: 0.5 }}
+            >
+              <Clock className="w-8 h-8 text-white" />
+            </motion.div>
+            <motion.div 
+              className="text-4xl font-bold text-white mb-2"
+              animate={{ scale: [1, 1.05, 1] }}
+              transition={{ duration: 2, repeat: Infinity, delay: 1 }}
+            >
+              {Math.floor(totalSessions * settings.workDuration / 60)}h {(totalSessions * settings.workDuration) % 60}m
+            </motion.div>
+            <div className="text-base font-medium text-white/80">
               Total Focus Time
             </div>
-          </div>
+            <div className="text-sm text-white/60 mt-1">
+              Time well spent! ⏰
+            </div>
+          </motion.div>
         </motion.div>
 
         {/* Settings Modal */}
@@ -439,16 +559,21 @@ function App() {
         />
       </motion.div>
 
-      {/* Toast Notifications */}
+      {/* Enhanced Toast Notifications */}
       <Toaster
         position="top-center"
         toastOptions={{
-          duration: 3000,
+          duration: 4000,
           style: {
-            background: darkMode ? '#374151' : '#ffffff',
+            background: darkMode ? 'rgba(55, 65, 81, 0.95)' : 'rgba(255, 255, 255, 0.95)',
             color: darkMode ? '#f3f4f6' : '#1f2937',
-            borderRadius: '12px',
-            boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+            borderRadius: '16px',
+            backdropFilter: 'blur(16px)',
+            border: `1px solid ${darkMode ? 'rgba(75, 85, 99, 0.3)' : 'rgba(229, 231, 235, 0.3)'}`,
+            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
+            fontSize: '16px',
+            fontWeight: '500',
+            padding: '16px 20px',
           }
         }}
       />
@@ -456,7 +581,7 @@ function App() {
   );
 }
 
-// Settings Modal Component
+// Enhanced Settings Modal Component
 function SettingsModal({ isOpen, onClose, settings, onUpdateSettings }) {
   const [tempSettings, setTempSettings] = useState(settings);
 
@@ -467,7 +592,10 @@ function SettingsModal({ isOpen, onClose, settings, onUpdateSettings }) {
   const handleSave = () => {
     onUpdateSettings(tempSettings);
     onClose();
-    toast.success('Settings saved!', { icon: '⚙️' });
+    toast.success('Settings saved successfully!', { 
+      icon: '⚙️',
+      duration: 3000
+    });
   };
 
   const updateSetting = (key, value) => {
@@ -493,207 +621,268 @@ function SettingsModal({ isOpen, onClose, settings, onUpdateSettings }) {
         >
           <motion.div
             className="modal-content"
-            initial={{ scale: 0.9, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.9, opacity: 0 }}
+            initial={{ scale: 0.9, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.9, opacity: 0, y: 20 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
-            <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+            {/* Enhanced Header */}
+            <div className="p-8 border-b border-white/[0.1] dark:border-neutral-700/[0.2]">
               <div className="flex justify-between items-center">
-                <h3 className="text-xl font-semibold text-gray-800 dark:text-white">
-                  Settings
-                </h3>
-                <button
+                <div className="flex items-center">
+                  <motion.div
+                    className="p-3 mr-4 bg-gradient-to-br from-primary-500 to-primary-600 rounded-2xl shadow-lg"
+                    whileHover={{ rotate: 90 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Settings className="w-6 h-6 text-white" />
+                  </motion.div>
+                  <h3 className="text-2xl font-bold text-neutral-800 dark:text-white">
+                    Settings
+                  </h3>
+                </div>
+                <motion.button
                   onClick={onClose}
-                  className="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  className="p-3 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-2xl transition-colors"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
                 >
-                  <X className="w-5 h-5" />
-                </button>
+                  <X className="w-6 h-6 text-neutral-600 dark:text-neutral-400" />
+                </motion.button>
               </div>
             </div>
 
-            {/* Content */}
-            <div className="p-6 space-y-6">
+            {/* Enhanced Content */}
+            <div className="p-8 space-y-8 max-h-[60vh] overflow-y-auto">
               {/* Timer Durations */}
-              <div>
-                <h4 className="text-lg font-medium text-gray-800 dark:text-white mb-4">
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 }}
+              >
+                <h4 className="text-xl font-bold text-neutral-800 dark:text-white mb-6 flex items-center">
+                  <Timer className="w-5 h-5 mr-2 text-primary-500" />
                   Timer Durations
                 </h4>
                 
-                <div className="space-y-4">
+                <div className="space-y-6">
                   {/* Work Duration */}
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Work Duration
-                    </label>
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => adjustTime('workDuration', -5)}
-                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="w-16 text-center font-mono">
-                        {tempSettings.workDuration}m
-                      </span>
-                      <button
-                        onClick={() => adjustTime('workDuration', 5)}
-                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </button>
+                  <div className="bg-gradient-to-br from-white/[0.1] to-white/[0.05] dark:from-neutral-800/[0.1] dark:to-neutral-800/[0.05] backdrop-blur-md rounded-2xl p-6 border border-white/[0.1] dark:border-neutral-700/[0.2]">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <label className="text-base font-semibold text-neutral-700 dark:text-neutral-300">
+                          Work Duration
+                        </label>
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                          Focus session length
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <motion.button
+                          onClick={() => adjustTime('workDuration', -5)}
+                          className="p-2 bg-neutral-200/50 dark:bg-neutral-700/50 hover:bg-neutral-300/50 dark:hover:bg-neutral-600/50 rounded-xl transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Minus className="w-4 h-4" />
+                        </motion.button>
+                        <span className="w-20 text-center font-mono text-lg font-bold bg-white/[0.1] dark:bg-neutral-800/[0.1] rounded-xl py-2 px-3 border border-white/[0.2] dark:border-neutral-700/[0.2]">
+                          {tempSettings.workDuration}m
+                        </span>
+                        <motion.button
+                          onClick={() => adjustTime('workDuration', 5)}
+                          className="p-2 bg-neutral-200/50 dark:bg-neutral-700/50 hover:bg-neutral-300/50 dark:hover:bg-neutral-600/50 rounded-xl transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </motion.button>
+                      </div>
                     </div>
                   </div>
 
                   {/* Short Break Duration */}
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Short Break
-                    </label>
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => adjustTime('shortBreakDuration', -1)}
-                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="w-16 text-center font-mono">
-                        {tempSettings.shortBreakDuration}m
-                      </span>
-                      <button
-                        onClick={() => adjustTime('shortBreakDuration', 1)}
-                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </button>
+                  <div className="bg-gradient-to-br from-white/[0.1] to-white/[0.05] dark:from-neutral-800/[0.1] dark:to-neutral-800/[0.05] backdrop-blur-md rounded-2xl p-6 border border-white/[0.1] dark:border-neutral-700/[0.2]">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <label className="text-base font-semibold text-neutral-700 dark:text-neutral-300">
+                          Short Break
+                        </label>
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                          Quick rest between sessions
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <motion.button
+                          onClick={() => adjustTime('shortBreakDuration', -1)}
+                          className="p-2 bg-neutral-200/50 dark:bg-neutral-700/50 hover:bg-neutral-300/50 dark:hover:bg-neutral-600/50 rounded-xl transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Minus className="w-4 h-4" />
+                        </motion.button>
+                        <span className="w-20 text-center font-mono text-lg font-bold bg-white/[0.1] dark:bg-neutral-800/[0.1] rounded-xl py-2 px-3 border border-white/[0.2] dark:border-neutral-700/[0.2]">
+                          {tempSettings.shortBreakDuration}m
+                        </span>
+                        <motion.button
+                          onClick={() => adjustTime('shortBreakDuration', 1)}
+                          className="p-2 bg-neutral-200/50 dark:bg-neutral-700/50 hover:bg-neutral-300/50 dark:hover:bg-neutral-600/50 rounded-xl transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </motion.button>
+                      </div>
                     </div>
                   </div>
 
                   {/* Long Break Duration */}
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Long Break
-                    </label>
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => adjustTime('longBreakDuration', -5)}
-                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="w-16 text-center font-mono">
-                        {tempSettings.longBreakDuration}m
-                      </span>
-                      <button
-                        onClick={() => adjustTime('longBreakDuration', 5)}
-                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </button>
+                  <div className="bg-gradient-to-br from-white/[0.1] to-white/[0.05] dark:from-neutral-800/[0.1] dark:to-neutral-800/[0.05] backdrop-blur-md rounded-2xl p-6 border border-white/[0.1] dark:border-neutral-700/[0.2]">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <label className="text-base font-semibold text-neutral-700 dark:text-neutral-300">
+                          Long Break
+                        </label>
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                          Extended rest period
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <motion.button
+                          onClick={() => adjustTime('longBreakDuration', -5)}
+                          className="p-2 bg-neutral-200/50 dark:bg-neutral-700/50 hover:bg-neutral-300/50 dark:hover:bg-neutral-600/50 rounded-xl transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Minus className="w-4 h-4" />
+                        </motion.button>
+                        <span className="w-20 text-center font-mono text-lg font-bold bg-white/[0.1] dark:bg-neutral-800/[0.1] rounded-xl py-2 px-3 border border-white/[0.2] dark:border-neutral-700/[0.2]">
+                          {tempSettings.longBreakDuration}m
+                        </span>
+                        <motion.button
+                          onClick={() => adjustTime('longBreakDuration', 5)}
+                          className="p-2 bg-neutral-200/50 dark:bg-neutral-700/50 hover:bg-neutral-300/50 dark:hover:bg-neutral-600/50 rounded-xl transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </motion.button>
+                      </div>
                     </div>
                   </div>
 
                   {/* Long Break Interval */}
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                      Long Break Interval
-                    </label>
-                    <div className="flex items-center space-x-2">
-                      <button
-                        onClick={() => adjustTime('longBreakInterval', -1)}
-                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                      >
-                        <Minus className="w-4 h-4" />
-                      </button>
-                      <span className="w-16 text-center font-mono">
-                        {tempSettings.longBreakInterval}
-                      </span>
-                      <button
-                        onClick={() => adjustTime('longBreakInterval', 1)}
-                        className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded"
-                      >
-                        <Plus className="w-4 h-4" />
-                      </button>
+                  <div className="bg-gradient-to-br from-white/[0.1] to-white/[0.05] dark:from-neutral-800/[0.1] dark:to-neutral-800/[0.05] backdrop-blur-md rounded-2xl p-6 border border-white/[0.1] dark:border-neutral-700/[0.2]">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <label className="text-base font-semibold text-neutral-700 dark:text-neutral-300">
+                          Long Break Interval
+                        </label>
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                          Sessions before long break
+                        </p>
+                      </div>
+                      <div className="flex items-center space-x-3">
+                        <motion.button
+                          onClick={() => adjustTime('longBreakInterval', -1)}
+                          className="p-2 bg-neutral-200/50 dark:bg-neutral-700/50 hover:bg-neutral-300/50 dark:hover:bg-neutral-600/50 rounded-xl transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Minus className="w-4 h-4" />
+                        </motion.button>
+                        <span className="w-20 text-center font-mono text-lg font-bold bg-white/[0.1] dark:bg-neutral-800/[0.1] rounded-xl py-2 px-3 border border-white/[0.2] dark:border-neutral-700/[0.2]">
+                          {tempSettings.longBreakInterval}
+                        </span>
+                        <motion.button
+                          onClick={() => adjustTime('longBreakInterval', 1)}
+                          className="p-2 bg-neutral-200/50 dark:bg-neutral-700/50 hover:bg-neutral-300/50 dark:hover:bg-neutral-600/50 rounded-xl transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.9 }}
+                        >
+                          <Plus className="w-4 h-4" />
+                        </motion.button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Automation */}
-              <div>
-                <h4 className="text-lg font-medium text-gray-800 dark:text-white mb-4">
-                  Automation
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 }}
+              >
+                <h4 className="text-xl font-bold text-neutral-800 dark:text-white mb-6 flex items-center">
+                  <Settings className="w-5 h-5 mr-2 text-secondary-500" />
+                  Automation & Preferences
                 </h4>
                 
-                <div className="space-y-3">
-                  <label className="flex items-center space-x-3">
-                    <input
-                      type="checkbox"
-                      checked={tempSettings.autoStartBreaks}
-                      onChange={(e) => updateSetting('autoStartBreaks', e.target.checked)}
-                      className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
-                    />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      Auto-start breaks
-                    </span>
-                  </label>
-
-                  <label className="flex items-center space-x-3">
-                    <input
-                      type="checkbox"
-                      checked={tempSettings.autoStartWork}
-                      onChange={(e) => updateSetting('autoStartWork', e.target.checked)}
-                      className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
-                    />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      Auto-start work sessions
-                    </span>
-                  </label>
-
-                  <label className="flex items-center space-x-3">
-                    <input
-                      type="checkbox"
-                      checked={tempSettings.soundEnabled}
-                      onChange={(e) => updateSetting('soundEnabled', e.target.checked)}
-                      className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
-                    />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      Enable notifications
-                    </span>
-                  </label>
-
-                  <label className="flex items-center space-x-3">
-                    <input
-                      type="checkbox"
-                      checked={tempSettings.darkMode}
-                      onChange={(e) => updateSetting('darkMode', e.target.checked)}
-                      className="w-4 h-4 text-primary-600 rounded focus:ring-primary-500"
-                    />
-                    <span className="text-sm text-gray-700 dark:text-gray-300">
-                      Dark mode
-                    </span>
-                  </label>
+                <div className="space-y-4">
+                  {[
+                    { key: 'autoStartBreaks', label: 'Auto-start breaks', desc: 'Automatically start break sessions' },
+                    { key: 'autoStartWork', label: 'Auto-start work sessions', desc: 'Automatically start work sessions after breaks' },
+                    { key: 'soundEnabled', label: 'Enable notifications', desc: 'Play sound when sessions complete' },
+                    { key: 'darkMode', label: 'Dark mode', desc: 'Use dark color scheme' }
+                  ].map((setting, index) => (
+                    <motion.label
+                      key={setting.key}
+                      className="flex items-center justify-between p-4 bg-gradient-to-br from-white/[0.1] to-white/[0.05] dark:from-neutral-800/[0.1] dark:to-neutral-800/[0.05] backdrop-blur-md rounded-2xl border border-white/[0.1] dark:border-neutral-700/[0.2] cursor-pointer hover:bg-white/[0.15] dark:hover:bg-neutral-800/[0.15] transition-all duration-200"
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.99 }}
+                    >
+                      <div>
+                        <span className="text-base font-semibold text-neutral-700 dark:text-neutral-300">
+                          {setting.label}
+                        </span>
+                        <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1">
+                          {setting.desc}
+                        </p>
+                      </div>
+                      <motion.div
+                        className={`relative w-12 h-6 rounded-full transition-colors ${
+                          tempSettings[setting.key] 
+                            ? 'bg-gradient-to-r from-primary-500 to-primary-600' 
+                            : 'bg-neutral-300 dark:bg-neutral-600'
+                        }`}
+                        onClick={() => updateSetting(setting.key, !tempSettings[setting.key])}
+                      >
+                        <motion.div
+                          className="absolute top-0.5 w-5 h-5 bg-white rounded-full shadow-lg"
+                          animate={{
+                            x: tempSettings[setting.key] ? 24 : 2
+                          }}
+                          transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                        />
+                      </motion.div>
+                    </motion.label>
+                  ))}
                 </div>
-              </div>
+              </motion.div>
             </div>
 
-            {/* Footer */}
-            <div className="p-6 border-t border-gray-200 dark:border-gray-700">
-              <div className="flex justify-end space-x-3">
-                <button
+            {/* Enhanced Footer */}
+            <div className="p-8 border-t border-white/[0.1] dark:border-neutral-700/[0.2]">
+              <div className="flex justify-end space-x-4">
+                <motion.button
                   onClick={onClose}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
+                  className="px-6 py-3 text-base font-semibold text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-neutral-700 rounded-2xl transition-colors"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   Cancel
-                </button>
-                <button
+                </motion.button>
+                <motion.button
                   onClick={handleSave}
-                  className="btn-primary flex items-center space-x-2"
+                  className="btn-primary flex items-center space-x-3"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
                 >
-                  <Save className="w-4 h-4" />
+                  <Save className="w-5 h-5" />
                   <span>Save Settings</span>
-                </button>
+                </motion.button>
               </div>
             </div>
           </motion.div>
